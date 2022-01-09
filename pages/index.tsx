@@ -1,9 +1,17 @@
 import { addWeeks, format } from "date-fns"
-import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import {
+    AnimatePresence,
+    AnimateSharedLayout,
+    motion,
+    useReducedMotion,
+} from "framer-motion"
+import React, { useEffect, useState } from "react"
 import ImageCard, { NASAImage } from "../components/ImageCard"
 import Layout from "../components/Layout"
 import { useAppContext } from "../context/state"
+
+const ConditionalWrapper = ({ condition, wrapper, children }) =>
+    condition ? wrapper(children) : children
 
 const IndexPage = () => {
     // const [apiUrl, setApiUrl] = useState(
@@ -13,6 +21,8 @@ const IndexPage = () => {
     const [startDate, setStartDate] = useState(addWeeks(new Date(), -1))
     const [images, setImages] = useState<Array<NASAImage>>([])
     const [loading, setLoading] = useState(false)
+
+    const shouldReduceMotion = useReducedMotion()
 
     const {
         state: { likedOnly },
@@ -123,8 +133,8 @@ const IndexPage = () => {
     return (
         <Layout title="Spacestagram | Home">
             <motion.main
-                layout
-                className="grid px-6 items-start md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense"
+                layout={!shouldReduceMotion}
+                className="grid px-6 items-start md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense bg-slate-900"
             >
                 <AnimateSharedLayout>
                     {(() => {
@@ -145,7 +155,7 @@ const IndexPage = () => {
                     })()}
                 </AnimateSharedLayout>
             </motion.main>
-            {loading && "Loading..."}
+            {loading && <span className="p-4">Loading...</span>}
         </Layout>
     )
 }

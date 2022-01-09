@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react"
 import { FaCalendarAlt } from "react-icons/fa"
 import { AiOutlineHeart, AiFillHeart, AiOutlineShareAlt } from "react-icons/ai"
 import { useAppContext } from "../context/state"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 
 export interface NASAImage {
     resource?: string
@@ -22,6 +22,7 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
     const {
         state: { likedOnly },
     } = useAppContext()
+    const shouldReduceMotion = useReducedMotion()
 
     useEffect(() => {
         setLiked(JSON.parse(localStorage.getItem("likes"))[image.url])
@@ -38,14 +39,10 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
         localStorage.setItem("likes", JSON.stringify(allLiked))
     }, [liked])
 
-    // if (likedOnly && !liked) return <motion.section key={image.url} />
-
     return (
         <motion.section
-            layout="position"
+            layout={shouldReduceMotion ? false : "position"}
             key={image.url}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
             className="flex flex-col shadow-lg rounded-xl bg-slate-800"
         >
             <figure>
@@ -74,23 +71,21 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
                 </div>
             </div>
             {/* <hr className="self-center w-2/3 m-4 opacity-50" /> */}
-            <div className="grid grid-cols-2 gap-2 m-4 my-2 text-lgw-max-full text-slate-900">
-                <button
-                    className={`flex items-center justify-center gap-2 p-3 font-semibold rounded-lg ${
-                        liked ? "bg-pink-800 text-slate-200" : "bg-slate-300"
-                    } transition-all `}
-                    onClick={() => {
-                        setLiked((prevState) => !prevState)
-                    }}
-                >
-                    {liked ? <AiFillHeart /> : <AiOutlineHeart />}
-                    Like
-                </button>
-                <button className="flex items-center justify-center gap-2 p-3 text-lg font-semibold rounded-lg bg-slate-300">
-                    <AiOutlineShareAlt />
-                    Share
-                </button>
-            </div>
+            {/* <div className="grid grid-cols-2 gap-2"> */}
+            <button
+                className={` m-4 my-2 text-lgw-max-full flex items-center justify-center gap-2 p-3 font-semibold rounded-lg ${
+                    liked
+                        ? "bg-pink-800 text-slate-200"
+                        : "bg-slate-300 text-slate-900"
+                } transition-all `}
+                onClick={() => {
+                    setLiked((prevState) => !prevState)
+                }}
+            >
+                {liked ? <AiFillHeart /> : <AiOutlineHeart />}
+                Like
+            </button>
+            {/* </div> */}
             <div className="p-4 text-lg font-medium opacity-80">
                 <p>{image.explanation}</p>
             </div>

@@ -10,7 +10,7 @@ type Props = {
 }
 
 const Layout = ({ children, title = "Spacestagram" }: Props) => (
-    <div className="bg-slate-900 text-slate-200">
+    <div className="min-h-screen bg-slate-900 text-slate-200">
         <Head>
             <title>{title}</title>
             <meta charSet="utf-8" />
