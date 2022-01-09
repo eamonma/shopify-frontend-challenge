@@ -15,15 +15,11 @@ const Nav = () => {
             <div className="font-serif text-2xl font-medium tracking-wide uppercase md:text-4xl">
                 Spacestagram
             </div>
-            {/* <ul className="flex gap-4 font-medium md:gap-6">
-                <li>
-                    <Link href="/">All</Link>
-                </li>
-                <li>
-                    <Link href="/liked">Liked</Link>
-                </li>
-            </ul> */}
+
             <div className="flex items-center gap-2">
+                <label htmlFor="liked-only" className="font-semibold">
+                    Only show liked
+                </label>
                 <Toggle
                     id="liked-only"
                     checked={likedOnly}
@@ -34,7 +30,6 @@ const Nav = () => {
                         })
                     }
                 />
-                <label htmlFor="liked-only">Only liked</label>
             </div>
         </nav>
     )

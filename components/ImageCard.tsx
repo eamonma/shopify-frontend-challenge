@@ -1,8 +1,7 @@
+import { motion, useReducedMotion } from "framer-motion"
 import React, { Fragment, useEffect, useState } from "react"
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"
 import { FaCalendarAlt } from "react-icons/fa"
-import { AiOutlineHeart, AiFillHeart, AiOutlineShareAlt } from "react-icons/ai"
-import { useAppContext } from "../context/state"
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 
 export interface NASAImage {
     resource?: string
@@ -19,9 +18,6 @@ export interface NASAImage {
 
 const ImageCard = ({ image }: { image: NASAImage }) => {
     const [liked, setLiked] = useState(false)
-    const {
-        state: { likedOnly },
-    } = useAppContext()
     const shouldReduceMotion = useReducedMotion()
 
     useEffect(() => {
@@ -70,8 +66,6 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
                     )}
                 </div>
             </div>
-            {/* <hr className="self-center w-2/3 m-4 opacity-50" /> */}
-            {/* <div className="grid grid-cols-2 gap-2"> */}
             <button
                 className={` m-4 my-2 text-lgw-max-full flex items-center justify-center gap-2 p-3 font-semibold rounded-lg ${
                     liked
@@ -83,9 +77,9 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
                 }}
             >
                 {liked ? <AiFillHeart /> : <AiOutlineHeart />}
-                Like
+
+                {liked ? "Unlike" : "Like"}
             </button>
-            {/* </div> */}
             <div className="p-4 text-lg font-medium opacity-80">
                 <p>{image.explanation}</p>
             </div>

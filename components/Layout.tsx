@@ -25,10 +25,6 @@ const Layout = ({ children, title = "Spacestagram" }: Props) => (
         <div className="relative top-24 bg-slate-900 text-slate-200">
             {children}
         </div>
-        {/* <footer>
-            <hr />
-            <span>I'm here to stay (Footer)</span>
-        </footer> */}
     </div>
 )
 
