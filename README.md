@@ -2,7 +2,7 @@
 
 > A webpage that can pull images, and allow the user to “like” and “unlike” their favourite images.
 
-For the 2022 summer Shopify [Front End Developer Intern Challenge](https://docs.google.com/document/d/13zXpyrC2yGxoLXKktxw2VJG2Jw8SdUfliLM-bYQLjqE/edit].
+For the 2022 summer Shopify [Front End Developer Intern Challenge](https://docs.google.com/document/d/13zXpyrC2yGxoLXKktxw2VJG2Jw8SdUfliLM-bYQLjqE/edit).
 
 ## Stack
 
