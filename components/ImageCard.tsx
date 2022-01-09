@@ -1,6 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react"
 import { FaCalendarAlt } from "react-icons/fa"
 import { AiOutlineHeart, AiFillHeart, AiOutlineShareAlt } from "react-icons/ai"
+import { useAppContext } from "../context/state"
+import { AnimatePresence, motion } from "framer-motion"
 
 export interface NASAImage {
     resource?: string
@@ -17,6 +19,9 @@ export interface NASAImage {
 
 const ImageCard = ({ image }: { image: NASAImage }) => {
     const [liked, setLiked] = useState(false)
+    const {
+        state: { likedOnly },
+    } = useAppContext()
 
     useEffect(() => {
         setLiked(JSON.parse(localStorage.getItem("likes"))[image.url])
@@ -33,8 +38,16 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
         localStorage.setItem("likes", JSON.stringify(allLiked))
     }, [liked])
 
+    // if (likedOnly && !liked) return <motion.section key={image.url} />
+
     return (
-        <section className="flex flex-col shadow-lg rounded-xl bg-slate-800">
+        <motion.section
+            layout="position"
+            key={image.url}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col shadow-lg rounded-xl bg-slate-800"
+        >
             <figure>
                 <img
                     src={image.url}
@@ -81,7 +94,7 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
             <div className="p-4 text-lg font-medium opacity-80">
                 <p>{image.explanation}</p>
             </div>
-        </section>
+        </motion.section>
     )
 }
 

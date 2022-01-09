@@ -2,6 +2,7 @@ import React, { ReactNode } from "react"
 import Link from "next/link"
 import Head from "next/head"
 import Nav from "./Nav"
+import { AppContextProvider } from "../context/state"
 
 type Props = {
     children?: ReactNode
