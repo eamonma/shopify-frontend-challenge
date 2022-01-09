@@ -49,8 +49,6 @@ const AppContextReducer = (state: AppData, action: Action) => {
 }
 
 const AppContextProvider = ({ children }: AppContextProviderProps) => {
-    let lsAppContext: null | string = null
-
     const appContext = {
         likedOnly: false,
     }

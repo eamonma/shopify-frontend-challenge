@@ -23,12 +23,14 @@ const Nav = () => {
                 <Toggle
                     id="liked-only"
                     checked={likedOnly}
-                    onChange={() =>
+                    onChange={() => {
                         dispatch({
                             type: "SET_LIKED_ONLY",
                             payload: !likedOnly,
                         })
-                    }
+
+                        window.scrollTo(0, 0)
+                    }}
                 />
             </div>
         </nav>
