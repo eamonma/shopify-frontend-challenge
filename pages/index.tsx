@@ -14,10 +14,6 @@ const ConditionalWrapper = ({ condition, wrapper, children }) =>
     condition ? wrapper(children) : children
 
 const IndexPage = () => {
-    // const [apiUrl, setApiUrl] = useState(
-    //     `https://api.nasa.gov/planetary/apod?api_key=${process.env.NEXT_PUBLIC_NASA_API}&start_date=2022-01-01`
-    // )
-
     const [startDate, setStartDate] = useState(addWeeks(new Date(), -1))
     const [images, setImages] = useState<Array<NASAImage>>([])
     const [loading, setLoading] = useState(true)
