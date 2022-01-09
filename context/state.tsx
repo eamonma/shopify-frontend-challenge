@@ -51,16 +51,8 @@ const AppContextReducer = (state: AppData, action: Action) => {
 const AppContextProvider = ({ children }: AppContextProviderProps) => {
     let lsAppContext: null | string = null
 
-    if (typeof window !== "undefined") {
-        lsAppContext = localStorage.getItem("appContext")
-    }
-
-    let appContext: AppData
-    if (lsAppContext) appContext = { ...(JSON.parse(lsAppContext) as AppData) }
-    else {
-        appContext = {
-            likedOnly: false,
-        }
+    const appContext = {
+        likedOnly: false,
     }
 
     const [state, dispatch] = React.useReducer(AppContextReducer, appContext)
