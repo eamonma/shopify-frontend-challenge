@@ -1,23 +1,19 @@
-import { addWeeks, format } from "date-fns"
+import { addDays, addWeeks, format } from "date-fns"
 import {
     AnimatePresence,
     AnimateSharedLayout,
     motion,
     useReducedMotion,
 } from "framer-motion"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import ImageCard, { NASAImage } from "../components/ImageCard"
 import Layout from "../components/Layout"
 import { useAppContext } from "../context/state"
-
-const ConditionalWrapper = ({ condition, wrapper, children }) =>
-    condition ? wrapper(children) : children
 
 const IndexPage = () => {
     const [startDate, setStartDate] = useState(addWeeks(new Date(), -1))
     const [images, setImages] = useState<Array<NASAImage>>([])
     const [loading, setLoading] = useState(true)
-
     const shouldReduceMotion = useReducedMotion()
 
     const {
@@ -29,18 +25,45 @@ const IndexPage = () => {
             process.env.NEXT_PUBLIC_NASA_API
         }&start_date=${format(startDate, "yyyy-MM-dd")}`
 
+        console.log(apiUrl)
         ;(async () => {
+            const response = await (await fetch(apiUrl)).json()
             setLoading(true)
-            setImages(await (await fetch(apiUrl)).json())
+
+            try {
+                setImages(response.reverse())
+            } catch {
+                alert("An error occured. Please try again.")
+            }
+
             setLoading(false)
         })()
     }, [startDate])
+
+    const handleScroll = () => {
+        var isAtBottom =
+            document.documentElement.scrollHeight -
+                document.documentElement.scrollTop <=
+            document.documentElement.clientHeight
+
+        if (isAtBottom) {
+            // Load next posts
+            //   postNumber += postsPerPage;
+            //   setPosts([...Array(postNumber).keys()]);
+            // console.log("bottom")
+            setStartDate(addWeeks(startDate, -1))
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener("scroll", handleScroll)
+    }, [])
 
     return (
         <Layout title="Spacestagram | Home">
             <motion.main
                 layout={!shouldReduceMotion}
-                className="grid p-6 pt-0 items-start justify-center md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense bg-slate-900"
+                className="grid p-6 pt-0 items-start justify-center md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense bg-slate-900 overflow-scroll"
             >
                 <AnimateSharedLayout>
                     {(() => {
@@ -54,7 +77,6 @@ const IndexPage = () => {
                             : {}
 
                         const imagesToShow = [...images]
-                            .reverse()
                             .filter(
                                 (image) => !likedOnly || allLiked[image.url]
                             )
@@ -63,8 +85,6 @@ const IndexPage = () => {
                                     <ImageCard image={image} key={image.url} />
                                 )
                             })
-
-                        console.log(imagesToShow)
 
                         if (!imagesToShow.length && !loading)
                             return (
