@@ -11,7 +11,7 @@ const Nav = ({ hideToggle }: { hideToggle: boolean }) => {
     } = useAppContext()
 
     return (
-        <nav className="fixed z-10 flex items-center justify-between w-full h-16 p-4 shadow-md bg-slate-800">
+        <nav className="fixed z-10 flex flex-wrap items-center justify-between w-full h-auto gap-4 p-4 shadow-md sm:h-16 bg-slate-800">
             <Link href="/">
                 <a className="font-serif text-2xl font-medium tracking-wide uppercase md:text-3xl">
                     Spacestagram
