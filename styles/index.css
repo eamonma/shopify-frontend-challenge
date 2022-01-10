@@ -9,3 +9,7 @@ html {
 body {
     background-color: rgb(15, 23, 42);
 }
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
