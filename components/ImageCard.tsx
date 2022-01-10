@@ -37,7 +37,9 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
     const shouldReduceMotion = useReducedMotion()
 
     useEffect(() => {
-        setLiked(JSON.parse(localStorage.getItem("likes"))[image.url])
+        try {
+            setLiked(JSON.parse(localStorage.getItem("likes"))[image.url])
+        } catch {}
     }, [])
 
     useEffect(() => {
