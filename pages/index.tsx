@@ -27,25 +27,25 @@ const IndexPage = () => {
         state: { likedOnly },
     } = useAppContext()
 
-    const fetchImages = useCallback(async (startDate, endDate, currImages) => {
+    const fetchImages = useCallback((startDate, endDate, currImages) => {
         const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${
             process.env.NEXT_PUBLIC_NASA_API
         }&start_date=${format(startDate, "yyyy-MM-dd")}&end_date=${format(
             endDate,
             "yyyy-MM-dd"
         )}`
+        ;(async () => {
+            const response = await (await fetch(apiUrl)).json()
+            setLoading(true)
 
-        console.log(apiUrl)
-        const response = await (await fetch(apiUrl)).json()
-        setLoading(true)
+            try {
+                setImages([...currImages, ...response.reverse()])
+            } catch {
+                alert("An error occured. Please try again.")
+            }
 
-        try {
-            setImages([...currImages, ...response.reverse()])
-        } catch {
-            alert("An error occured. Please try again.")
-        }
-
-        setLoading(false)
+            setLoading(false)
+        })()
     }, [])
 
     useEffect(() => {
@@ -73,7 +73,7 @@ const IndexPage = () => {
 
                         const imagesToShow = [...images]
                             .filter(
-                                (image) => !likedOnly || allLiked[image.url]
+                                (image) => !likedOnly || allLiked[image.date]
                             )
                             .map((image, i) => {
                                 return (

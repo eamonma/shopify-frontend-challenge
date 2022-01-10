@@ -1,23 +1,16 @@
-import { isSameDay, isToday } from "date-fns"
+import { isSameDay } from "date-fns"
 import { zonedTimeToUtc } from "date-fns-tz"
 import { motion, useReducedMotion } from "framer-motion"
-import React, {
-    Fragment,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from "react"
+import Link from "next/link"
+import React, { Fragment, useCallback, useEffect, useState } from "react"
 import { AiFillHeart, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai"
-import {
-    FaCalendarAlt,
-    FaShare,
-    FaShareAlt,
-    FaShareSquare,
-} from "react-icons/fa"
-
+import { BsArrowRight } from "react-icons/bs"
+import { FaCalendarAlt } from "react-icons/fa"
 import { Controlled as ControlledZoom } from "react-medium-image-zoom"
 import "react-medium-image-zoom/dist/styles.css"
+import { cssTransition, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import "animate.css/animate.min.css"
 
 export interface NASAImage {
     resource?: string
@@ -32,13 +25,18 @@ export interface NASAImage {
     service_version: string
 }
 
+export const fade = cssTransition({
+    enter: "animate__animated animate__fadeIn",
+    exit: "animate__animated animate__fadeOut",
+})
+
 const ImageCard = ({ image }: { image: NASAImage }) => {
     const [liked, setLiked] = useState(false)
     const shouldReduceMotion = useReducedMotion()
 
     useEffect(() => {
         try {
-            setLiked(JSON.parse(localStorage.getItem("likes"))[image.url])
+            setLiked(JSON.parse(localStorage.getItem("likes"))[image.date])
         } catch {}
     }, [])
 
@@ -48,7 +46,7 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
         // If allLiked does not exist in localstorage
         const allLiked = allLikedLS ? JSON.parse(allLikedLS) : {}
 
-        allLiked[image.url] = liked
+        allLiked[image.date] = liked
 
         localStorage.setItem("likes", JSON.stringify(allLiked))
     }, [liked])
@@ -68,10 +66,16 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
         zonedTimeToUtc(new Date(), "UTC")
     )
 
+    const notify = () =>
+        toast.dark(`Copied ${image.date} APOD link to clipboard.`, {
+            transition: fade,
+        })
+
     return (
         <motion.section
             layout={shouldReduceMotion ? false : "position"}
             key={image.url}
+            layoutId={image.date + "-card"}
             className={`flex flex-col shadow-lg rounded-xl bg-slate-800`}
         >
             <figure>
@@ -91,20 +95,24 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
                         />
                     </ControlledZoom>
                 ) : (
-                    <div className="relative pb-[56.25%]">
+                    <div className="relative pb-[56.25%] transition-all">
                         <iframe
                             // width="420"
                             // height="315"
 
-                            className="absolute top-0 left-0 w-full h-full rounded-b-none rounded-xl"
+                            className="absolute top-0 left-0 w-full h-full transition-all rounded-b-none rounded-xl"
                             src={image.url}
                         ></iframe>
                     </div>
                 )}
                 <figcaption className="p-6 pb-2">
-                    <h2 className={`flex flex-col text-4xl font-semibold`}>
+                    <motion.h2
+                        layout={!shouldReduceMotion}
+                        layoutId={image.date + "-title"}
+                        className={`flex flex-col text-4xl font-semibold`}
+                    >
                         {image.title}
-                    </h2>
+                    </motion.h2>
                 </figcaption>
             </figure>
             <div className="flex justify-between w-full gap-6 p-6 py-2 text-lg font-medium">
@@ -123,23 +131,51 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
                     )}
                 </div>
             </div>
-            <button
-                className={`m-6 my-2 flex-1 text-lg w-max-full flex items-center justify-center gap-2 p-3 rounded-lg ${
-                    liked
-                        ? "bg-pink-800 text-slate-200"
-                        : "bg-slate-300 text-slate-900"
-                } hover:bg-opacity-90 transition-all`}
-                onClick={() => {
-                    setLiked((prevState) => !prevState)
-                }}
-            >
-                {liked ? <AiFillHeart /> : <AiOutlineHeart />}
+            <div className="flex gap-4 m-6 my-2">
+                <button
+                    className={`flex-1 text-lg w-max-full flex items-center justify-center gap-2 p-3 rounded-lg ${
+                        liked
+                            ? "bg-pink-800 text-slate-200"
+                            : "bg-slate-300 text-slate-900"
+                    } hover:bg-opacity-90 transition-all`}
+                    onClick={() => {
+                        setLiked((prevState) => !prevState)
+                    }}
+                >
+                    {liked ? <AiFillHeart /> : <AiOutlineHeart />}
 
-                {liked ? "Unlike" : "Like"}
-            </button>
+                    {liked ? "Unlike" : "Like"}
+                </button>
+                <button
+                    className={`flex items-center justify-center flex-1 gap-2 p-3 text-lg transition-all rounded-lg w-max-full bg-slate-300 text-slate-900 hover:bg-opacity-90`}
+                    onClick={() => {
+                        navigator.clipboard.writeText(
+                            `${window.location.protocol}//${
+                                window.location.hostname
+                            }${
+                                window.location.port !== "80" &&
+                                `:${window.location.port}`
+                            }/${image.date}`
+                        )
 
-            <div className="p-6 pt-4 text-lg font-medium opacity-80">
-                <p>{image.explanation}</p>
+                        notify()
+                    }}
+                >
+                    <AiOutlineShareAlt />
+                    Share
+                </button>
+            </div>
+
+            <div className="relative p-6 pt-4 pb-2 text-lg font-medium opacity-80">
+                <p className="line-clamp-5">{image.explanation}</p>
+                <Link href={`/${image.date}`}>
+                    <a className="flex flex-row-reverse w-full p-4 pr-0 text-blue-300 group">
+                        <span className="inline-flex items-center gap-2">
+                            Read more{" "}
+                            <BsArrowRight className="relative transition top-[1px] group-hover:translate-x-1" />
+                        </span>
+                    </a>
+                </Link>
             </div>
         </motion.section>
     )

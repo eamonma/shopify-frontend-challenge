@@ -7,9 +7,14 @@ import { AppContextProvider } from "../context/state"
 type Props = {
     children?: ReactNode
     title?: string
+    hideToggle?: boolean
 }
 
-const Layout = ({ children, title = "Spacestagram" }: Props) => (
+const Layout = ({
+    children,
+    title = "Spacestagram",
+    hideToggle = false,
+}: Props) => (
     <div className="min-h-screen bg-slate-900 text-slate-200">
         <Head>
             <title>{title}</title>
@@ -20,9 +25,9 @@ const Layout = ({ children, title = "Spacestagram" }: Props) => (
             />
         </Head>
         <header>
-            <Nav />
+            <Nav hideToggle={hideToggle} />
         </header>
-        <div className="relative top-24 bg-slate-900 text-slate-200">
+        <div className="relative top-20 bg-slate-900 text-slate-200">
             {children}
         </div>
     </div>
