@@ -1,15 +1,14 @@
+import { useReducedMotion } from "framer-motion"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { Fragment, useCallback, useEffect, useState } from "react"
-import { fade, NASAImage } from "../components/ImageCard"
-import Layout from "../components/Layout"
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"
+import { BsArrowLeft } from "react-icons/bs"
+import { FaCalendarAlt } from "react-icons/fa"
 import { Controlled as ControlledZoom } from "react-medium-image-zoom"
 import "react-medium-image-zoom/dist/styles.css"
-import { AiFillHeart, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai"
-import { FaCalendarAlt } from "react-icons/fa"
-import { toast } from "react-toastify"
-import { motion, useReducedMotion } from "framer-motion"
-import { BsArrowLeft } from "react-icons/bs"
-import Link from "next/link"
+import { NASAImage } from "../components/ImageCard"
+import Layout from "../components/Layout"
 import ShareButton from "../components/ShareButton"
 
 const Image = () => {
@@ -72,7 +71,10 @@ const Image = () => {
     }, [image])
 
     return (
-        <Layout title={``} hideToggle>
+        <Layout
+            title={image && `${image.title}: APOD ${image.date} - Spacestagram`}
+            hideToggle
+        >
             <Link href="/">
                 <a className="flex p-4 pl-6 m-0 text-blue-300 w-fit group">
                     <span className="inline-flex items-center gap-2">
