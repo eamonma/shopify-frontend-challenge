@@ -27,12 +27,11 @@ const ShareButton = ({ image }: { image: NASAImage }) => {
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: `Share ${image.title}`,
+                            title: `APOD ${image.date}`,
+                            text: `${image.title}`,
                             url,
                         })
-                        .then(() => {
-                            console.log("Thanks for sharing!")
-                        })
+                        .then(() => {})
                         .catch(console.error)
                 } else {
                     // fallback
