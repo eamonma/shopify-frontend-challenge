@@ -1,3 +1,4 @@
+import { Spinner } from "@chakra-ui/spinner"
 import { addDays, addWeeks, format } from "date-fns"
 import {
     AnimatePresence,
@@ -5,13 +6,20 @@ import {
     motion,
     useReducedMotion,
 } from "framer-motion"
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, {
+    Fragment,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from "react"
 import ImageCard, { NASAImage } from "../components/ImageCard"
 import Layout from "../components/Layout"
 import { useAppContext } from "../context/state"
+import { SpinnerCircular } from "spinners-react"
 
 const IndexPage = () => {
-    const [startDate, setStartDate] = useState(addWeeks(new Date(), -1))
+    const [endDate, setEndDate] = useState(new Date())
     const [images, setImages] = useState<Array<NASAImage>>([])
     const [loading, setLoading] = useState(true)
     const shouldReduceMotion = useReducedMotion()
@@ -20,44 +28,32 @@ const IndexPage = () => {
         state: { likedOnly },
     } = useAppContext()
 
-    useEffect(() => {
+    const fetchImages = useCallback(async (startDate, endDate, currImages) => {
         const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${
             process.env.NEXT_PUBLIC_NASA_API
-        }&start_date=${format(startDate, "yyyy-MM-dd")}`
+        }&start_date=${format(startDate, "yyyy-MM-dd")}&end_date=${format(
+            endDate,
+            "yyyy-MM-dd"
+        )}`
 
         console.log(apiUrl)
-        ;(async () => {
-            const response = await (await fetch(apiUrl)).json()
-            setLoading(true)
+        const response = await (await fetch(apiUrl)).json()
+        setLoading(true)
 
-            try {
-                setImages(response.reverse())
-            } catch {
-                alert("An error occured. Please try again.")
-            }
-
-            setLoading(false)
-        })()
-    }, [startDate])
-
-    const handleScroll = () => {
-        var isAtBottom =
-            document.documentElement.scrollHeight -
-                document.documentElement.scrollTop <=
-            document.documentElement.clientHeight
-
-        if (isAtBottom) {
-            // Load next posts
-            //   postNumber += postsPerPage;
-            //   setPosts([...Array(postNumber).keys()]);
-            // console.log("bottom")
-            setStartDate(addWeeks(startDate, -1))
+        try {
+            setImages([...currImages, ...response.reverse()])
+        } catch {
+            alert("An error occured. Please try again.")
         }
-    }
+
+        setLoading(false)
+    }, [])
 
     useEffect(() => {
-        window.addEventListener("scroll", handleScroll)
-    }, [])
+        const startDate = addWeeks(endDate, -1)
+
+        fetchImages(startDate, endDate, images)
+    }, [endDate])
 
     return (
         <Layout title="Spacestagram | Home">
@@ -86,7 +82,7 @@ const IndexPage = () => {
                                 )
                             })
 
-                        if (!imagesToShow.length && !loading)
+                        if (likedOnly && !imagesToShow.length && !loading)
                             return (
                                 <motion.div
                                     layout="position"
@@ -100,7 +96,32 @@ const IndexPage = () => {
                     })()}
                 </AnimateSharedLayout>
             </motion.main>
-            {loading && <div className="relative p-4 -top-8">Loading...</div>}
+            {!likedOnly && (
+                <div className="relative flex items-center justify-center p-2 -top-4">
+                    <button
+                        disabled={loading}
+                        className="flex items-center gap-2 p-2 px-4 text-lg rounded-lg bg-slate-300 text-slate-900 hover:opacity-90 disabled:opacity-80 disabled:cursor-not-allowed"
+                        onClick={() => {
+                            setLoading(true)
+                            setEndDate(addDays(addWeeks(endDate, -1), -1))
+                        }}
+                    >
+                        {loading ? (
+                            <Fragment>
+                                Loading{" "}
+                                <SpinnerCircular
+                                    color="#fff"
+                                    size={20}
+                                    thickness={170}
+                                    speed={150}
+                                />
+                            </Fragment>
+                        ) : (
+                            "Load more"
+                        )}
+                    </button>
+                </div>
+            )}
         </Layout>
     )
 }

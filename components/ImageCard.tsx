@@ -1,7 +1,13 @@
 import { isSameDay, isToday } from "date-fns"
 import { zonedTimeToUtc } from "date-fns-tz"
 import { motion, useReducedMotion } from "framer-motion"
-import React, { Fragment, useCallback, useEffect, useState } from "react"
+import React, {
+    Fragment,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from "react"
 import { AiFillHeart, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai"
 import {
     FaCalendarAlt,
@@ -67,20 +73,32 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
             className={`flex flex-col shadow-lg rounded-xl bg-slate-800`}
         >
             <figure>
-                <ControlledZoom
-                    isZoomed={isZoomed}
-                    onZoomChange={handleZoomChange}
-                    overlayBgColorEnd="rgba(30, 41, 59, 0.9)"
-                    overlayBgColorStart="rgba(30, 41, 59, 0)"
-                >
-                    <img
-                        src={image.url}
-                        alt={image.title}
-                        className={`w-full rounded-b-none shadow-md ${
-                            !isZoomed && "rounded-xl"
-                        }`}
-                    />
-                </ControlledZoom>
+                {image.media_type === "image" ? (
+                    <ControlledZoom
+                        isZoomed={isZoomed}
+                        onZoomChange={handleZoomChange}
+                        overlayBgColorEnd="rgba(30, 41, 59, 0.9)"
+                        overlayBgColorStart="rgba(30, 41, 59, 0)"
+                    >
+                        <img
+                            src={image.url}
+                            alt={image.title}
+                            className={`w-full rounded-b-none shadow-md ${
+                                !isZoomed && "rounded-xl"
+                            }`}
+                        />
+                    </ControlledZoom>
+                ) : (
+                    <div className="relative pb-[56.25%]">
+                        <iframe
+                            // width="420"
+                            // height="315"
+
+                            className="absolute top-0 left-0 w-full h-full rounded-b-none rounded-xl"
+                            src={image.url}
+                        ></iframe>
+                    </div>
+                )}
                 <figcaption className="p-6 pb-2">
                     <h2 className={`flex flex-col text-4xl font-semibold`}>
                         {image.title}
