@@ -58,7 +58,7 @@ const IndexPage = () => {
         <Layout title="Spacestagram | Home">
             <motion.main
                 layout={!shouldReduceMotion}
-                className="grid p-6 pt-0 items-start justify-center md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense bg-slate-900 overflow-scroll"
+                className="grid sm:p-6 p-4 pt-0 items-start justify-center md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense bg-slate-900 overflow-scroll"
             >
                 <AnimateSharedLayout>
                     {(() => {

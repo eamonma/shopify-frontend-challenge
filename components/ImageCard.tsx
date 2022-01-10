@@ -166,7 +166,7 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
                 </button>
             </div>
 
-            <div className="relative p-6 pt-4 pb-2 text-lg font-medium opacity-80">
+            <div className="relative p-4 pt-4 pb-2 text-lg font-medium sm:p-6 opacity-80">
                 <p className="line-clamp-5">{image.explanation}</p>
                 <Link href={`/${image.date}`}>
                     <a className="flex flex-row-reverse w-full p-4 pr-0 text-blue-300 group">

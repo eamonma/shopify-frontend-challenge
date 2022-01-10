@@ -27,7 +27,7 @@ const Layout = ({
         <header>
             <Nav hideToggle={hideToggle} />
         </header>
-        <div className="relative top-20 bg-slate-900 text-slate-200">
+        <div className="relative sm:top-20 top-32 bg-slate-900 text-slate-200">
             {children}
         </div>
     </div>
