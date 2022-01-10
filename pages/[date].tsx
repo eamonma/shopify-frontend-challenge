@@ -10,6 +10,7 @@ import { toast } from "react-toastify"
 import { motion, useReducedMotion } from "framer-motion"
 import { BsArrowLeft } from "react-icons/bs"
 import Link from "next/link"
+import ShareButton from "../components/ShareButton"
 
 const Image = () => {
     const router = useRouter()
@@ -70,15 +71,10 @@ const Image = () => {
         if (image) setLoading(false)
     }, [image])
 
-    const notify = () =>
-        toast.dark(`Copied ${image.date} APOD link to clipboard.`, {
-            transition: fade,
-        })
-
     return (
         <Layout title={``} hideToggle>
             <Link href="/">
-                <a className="flex p-4 pr-0 text-blue-300 group">
+                <a className="flex p-4 pl-6 m-0 text-blue-300 w-fit group">
                     <span className="inline-flex items-center gap-2">
                         <BsArrowLeft /> Back
                     </span>
@@ -86,7 +82,7 @@ const Image = () => {
             </Link>
 
             {!loading && (
-                <main className="flex flex-col items-center w-full p-6">
+                <main className="flex flex-col items-center w-full p-4 -mt-4 sm:p-6">
                     <div
                         className={`grid w-full max-w-6xl grid-cols-1 m-4 mb-12 shadow-lg md:grid-cols-2 rounded-xl bg-slate-800`}
                     >
@@ -114,7 +110,7 @@ const Image = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className="flex justify-center gap-4 p-6 ">
+                            <div className="flex justify-center gap-4 p-6 py-2">
                                 <button
                                     className={`flex-1 text-lg w-max-full flex items-center justify-center gap-2 p-3 rounded-lg ${
                                         liked
@@ -133,24 +129,7 @@ const Image = () => {
 
                                     {liked ? "Unlike" : "Like"}
                                 </button>
-                                <button
-                                    className={`flex items-center justify-center flex-1 gap-2 p-3 text-lg transition-all rounded-lg w-max-full bg-slate-300 text-slate-900 hover:bg-opacity-90`}
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(
-                                            `${window.location.protocol}//${
-                                                window.location.hostname
-                                            }${
-                                                window.location.port !== "80" &&
-                                                `:${window.location.port}`
-                                            }/${image.date}`
-                                        )
-
-                                        notify()
-                                    }}
-                                >
-                                    <AiOutlineShareAlt />
-                                    Share
-                                </button>
+                                <ShareButton image={image} />
                             </div>
                         </header>
                         <div className="relative w-full p-6 pt-4 text-lg font-medium max-w-prose opacity-80 ">

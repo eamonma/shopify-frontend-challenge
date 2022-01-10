@@ -11,6 +11,7 @@ import "react-medium-image-zoom/dist/styles.css"
 import { cssTransition, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import "animate.css/animate.min.css"
+import ShareButton from "./ShareButton"
 
 export interface NASAImage {
     resource?: string
@@ -24,11 +25,6 @@ export interface NASAImage {
     copyright?: string
     service_version: string
 }
-
-export const fade = cssTransition({
-    enter: "animate__animated animate__fadeIn",
-    exit: "animate__animated animate__fadeOut",
-})
 
 const ImageCard = ({ image }: { image: NASAImage }) => {
     const [liked, setLiked] = useState(false)
@@ -65,11 +61,6 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
         new Date(image.date),
         zonedTimeToUtc(new Date(), "UTC")
     )
-
-    const notify = () =>
-        toast.dark(`Copied ${image.date} APOD link to clipboard.`, {
-            transition: fade,
-        })
 
     return (
         <motion.section
@@ -146,24 +137,7 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
 
                     {liked ? "Unlike" : "Like"}
                 </button>
-                <button
-                    className={`flex items-center justify-center flex-1 gap-2 p-3 text-lg transition-all rounded-lg w-max-full bg-slate-300 text-slate-900 hover:bg-opacity-90`}
-                    onClick={() => {
-                        navigator.clipboard.writeText(
-                            `${window.location.protocol}//${
-                                window.location.hostname
-                            }${
-                                window.location.port !== "80" &&
-                                `:${window.location.port}`
-                            }/${image.date}`
-                        )
-
-                        notify()
-                    }}
-                >
-                    <AiOutlineShareAlt />
-                    Share
-                </button>
+                <ShareButton image={image} />
             </div>
 
             <div className="relative p-4 pt-4 pb-2 text-lg font-medium sm:p-6 opacity-80">

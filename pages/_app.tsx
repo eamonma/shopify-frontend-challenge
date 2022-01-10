@@ -14,8 +14,6 @@ function Spacestagram({ Component, pageProps }: AppProps) {
             <ToastContainer
                 hideProgressBar
                 toastStyle={{
-                    // background: "rgba(0,0,0,0.8)",
-                    // color: "#ccc",
                     borderRadius: "10px",
                 }}
             />

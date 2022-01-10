@@ -1,21 +1,10 @@
 import { addDays, addWeeks, format } from "date-fns"
-import {
-    AnimatePresence,
-    AnimateSharedLayout,
-    motion,
-    useReducedMotion,
-} from "framer-motion"
-import React, {
-    Fragment,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from "react"
+import { AnimateSharedLayout, motion, useReducedMotion } from "framer-motion"
+import React, { Fragment, useCallback, useEffect, useState } from "react"
+import { SpinnerCircular } from "spinners-react"
 import ImageCard, { NASAImage } from "../components/ImageCard"
 import Layout from "../components/Layout"
 import { useAppContext } from "../context/state"
-import { SpinnerCircular } from "spinners-react"
 
 const IndexPage = () => {
     const [endDate, setEndDate] = useState(new Date())
@@ -58,7 +47,7 @@ const IndexPage = () => {
         <Layout title="Spacestagram | Home">
             <motion.main
                 layout={!shouldReduceMotion}
-                className="grid sm:p-6 p-4 pt-0 items-start justify-center md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense bg-slate-900 overflow-scroll"
+                className="grid sm:p-6 p-4 sm:pt-0 pt-12 items-start justify-center md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense bg-slate-900 overflow-scroll"
             >
                 <AnimateSharedLayout>
                     {(() => {
@@ -96,9 +85,9 @@ const IndexPage = () => {
                 </AnimateSharedLayout>
             </motion.main>
             {!likedOnly && (
-                <div className="relative flex items-center justify-center p-2 -top-4">
+                <div className="relative flex items-center justify-center p-2 py-6 -top-4">
                     <button
-                        disabled={loading}
+                        disabled={process.browser ? loading : true}
                         className="flex items-center gap-2 p-2 px-4 text-lg rounded-lg bg-slate-300 text-slate-900 hover:opacity-90 disabled:opacity-80 disabled:cursor-not-allowed"
                         onClick={() => {
                             setLoading(true)
