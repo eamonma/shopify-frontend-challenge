@@ -6,6 +6,8 @@ import {
     isAfter,
     parseISO,
 } from "date-fns"
+import { utcToZonedTime } from "date-fns-tz"
+import { zonedTimeToUtc } from "date-fns-tz"
 import {
     AnimatePresence,
     AnimateSharedLayout,
@@ -66,6 +68,8 @@ const IndexPage = () => {
                         getISODateFromDate(startDate),
                         getISODateFromDate(endDate)
                     )
+
+                    console.log(response)
 
                     const totalImages = [...currImages, ...response.reverse()]
 

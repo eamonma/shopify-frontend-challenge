@@ -22,6 +22,8 @@ const getDaysArray = (start: Date, end: Date): Array<Date> => {
 }
 
 const getISODaysArray = (start: string, end: string) => {
+    console.log(start, end)
+
     const startDate = parseISO(start)
     const endDate = parseISO(end)
     const array = getDaysArray(startDate, endDate)
@@ -30,7 +32,9 @@ const getISODaysArray = (start: string, end: string) => {
 }
 
 export const getISODateFromDate = (date: Date) => {
-    return date.toISOString().split("T")[0]
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`
 }
 
 /**
@@ -48,6 +52,7 @@ const fetchImages = async (
     let apiCache: APICacheLocalStorage | Object = JSON.parse(lsApiCache)
     // const startISODate = format(parseISO(startDate), "yyyy-MM-dd")
     // const endISODate = format(endDate, "yyyy-MM-dd")
+    if (!apiCache) apiCache = {}
 
     const ISODaysBetween = getISODaysArray(startDate, endDate)
 
@@ -55,11 +60,14 @@ const fetchImages = async (
         (day) => day in apiCache
     )
 
+    // temp
+    ISODaysBetween.forEach((day) => {
+        console.log(day, day in apiCache)
+    })
+
     if (apiCache && everythingInRangeIsCached) {
         return ISODaysBetween.map((day) => apiCache[day])
     }
-
-    if (!apiCache) apiCache = {}
 
     // else query API and cache
 
