@@ -1,27 +1,6 @@
-import {
-    addDays,
-    addWeeks,
-    format,
-    intervalToDuration,
-    isAfter,
-    parseISO,
-} from "date-fns"
-import { utcToZonedTime } from "date-fns-tz"
-import { zonedTimeToUtc } from "date-fns-tz"
-import {
-    AnimatePresence,
-    AnimateSharedLayout,
-    motion,
-    useReducedMotion,
-} from "framer-motion"
-import React, {
-    Fragment,
-    useCallback,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "react"
+import { addDays, addWeeks } from "date-fns"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import React, { Fragment, useCallback, useEffect, useState } from "react"
 import { SpinnerCircular } from "spinners-react"
 import fetchImages, { getISODateFromDate } from "../components/fetchImages"
 import ImageCard, { NASAImage } from "../components/ImageCard"
@@ -38,29 +17,10 @@ const IndexPage = () => {
         state: { likedOnly },
     } = useAppContext()
 
-    const firstUpdate = useRef(true)
-
-    // useLayoutEffect(() => {
-    //     if (firstUpdate.current) {
-    //         firstUpdate.current = false
-    //         return
-    //     }
-    // })
-
     const getImages = useCallback(
         (startDate: Date, endDate: Date, currImages: Array<NASAImage>) => {
-            // const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${
-            //     process.env.NEXT_PUBLIC_NASA_API
-            // }&start_date=${format(startDate, "yyyy-MM-dd")}&end_date=${format(
-            //     endDate,
-            //     "yyyy-MM-dd"
-            // )}`
-
-            if (firstUpdate.current) return
+            // if (firstUpdate.current) return
             ;(async () => {
-                // const response: Array<NASAImage> = await (
-                //     await fetch(apiUrl)
-                // ).json()
                 setLoading(true)
 
                 try {
@@ -69,17 +29,9 @@ const IndexPage = () => {
                         getISODateFromDate(endDate)
                     )
 
-                    console.log(response)
-
                     const totalImages = [...currImages, ...response.reverse()]
 
                     setImages(totalImages)
-                    // try {
-                    //     const totalImages = [...currImages, ...response.reverse()]
-
-                    //     setImages(totalImages)
-
-                    //     localStorage.setItem("images", JSON.stringify(totalImages))
                 } catch (error) {
                     alert("An error occured. Please try again.")
                     console.log(error)
@@ -93,34 +45,6 @@ const IndexPage = () => {
 
     useEffect(() => {
         const startDate = addWeeks(endDate, -1)
-
-        // fetch from localStorage, if there is any
-        if (firstUpdate.current) {
-            firstUpdate.current = false
-            const prevImages: Array<NASAImage> = JSON.parse(
-                localStorage.getItem("images")
-            )
-
-            // if localstorage empty
-            if (!prevImages || !prevImages.length)
-                return getImages(startDate, endDate, images)
-
-            // localstorage has some images
-            const gapBetweenNowAndThen = intervalToDuration({
-                start: new Date(prevImages[0].date),
-                end: new Date(),
-            })
-
-            if (gapBetweenNowAndThen.days > 1) {
-                return getImages(
-                    addDays(new Date(prevImages[0].date), 1),
-                    new Date(),
-                    prevImages
-                )
-            }
-
-            setImages(prevImages)
-        }
 
         getImages(startDate, endDate, images)
     }, [endDate])

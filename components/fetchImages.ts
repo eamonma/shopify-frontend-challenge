@@ -22,8 +22,6 @@ const getDaysArray = (start: Date, end: Date): Array<Date> => {
 }
 
 const getISODaysArray = (start: string, end: string) => {
-    console.log(start, end)
-
     const startDate = parseISO(start)
     const endDate = parseISO(end)
     const array = getDaysArray(startDate, endDate)
@@ -59,11 +57,6 @@ const fetchImages = async (
     const everythingInRangeIsCached = ISODaysBetween.every(
         (day) => day in apiCache
     )
-
-    // temp
-    ISODaysBetween.forEach((day) => {
-        console.log(day, day in apiCache)
-    })
 
     if (apiCache && everythingInRangeIsCached) {
         return ISODaysBetween.map((day) => apiCache[day])
