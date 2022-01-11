@@ -67,6 +67,9 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
             layout={shouldReduceMotion ? false : "position"}
             key={image.url}
             layoutId={image.date + "-card"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className={`flex flex-col shadow-lg rounded-xl bg-slate-800`}
         >
             <figure>
@@ -97,13 +100,9 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
                     </div>
                 )}
                 <figcaption className="p-6 pb-2">
-                    <motion.h2
-                        layout={!shouldReduceMotion}
-                        layoutId={image.date + "-title"}
-                        className={`flex flex-col text-4xl font-semibold`}
-                    >
+                    <h2 className={`flex flex-col text-4xl font-semibold`}>
                         {image.title}
-                    </motion.h2>
+                    </h2>
                 </figcaption>
             </figure>
             <div className="flex justify-between w-full gap-6 p-6 py-2 text-lg font-medium">

@@ -5,7 +5,12 @@ import {
     intervalToDuration,
     isAfter,
 } from "date-fns"
-import { AnimateSharedLayout, motion, useReducedMotion } from "framer-motion"
+import {
+    AnimatePresence,
+    AnimateSharedLayout,
+    motion,
+    useReducedMotion,
+} from "framer-motion"
 import React, {
     Fragment,
     useCallback,
@@ -15,6 +20,7 @@ import React, {
     useState,
 } from "react"
 import { SpinnerCircular } from "spinners-react"
+import fetchImages from "../components/fetchImages"
 import ImageCard, { NASAImage } from "../components/ImageCard"
 import Layout from "../components/Layout"
 import { useAppContext } from "../context/state"
@@ -38,28 +44,34 @@ const IndexPage = () => {
     //     }
     // })
 
-    const fetchImages = useCallback(
+    const getImages = useCallback(
         (startDate: Date, endDate: Date, currImages: Array<NASAImage>) => {
-            const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${
-                process.env.NEXT_PUBLIC_NASA_API
-            }&start_date=${format(startDate, "yyyy-MM-dd")}&end_date=${format(
-                endDate,
-                "yyyy-MM-dd"
-            )}`
+            // const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${
+            //     process.env.NEXT_PUBLIC_NASA_API
+            // }&start_date=${format(startDate, "yyyy-MM-dd")}&end_date=${format(
+            //     endDate,
+            //     "yyyy-MM-dd"
+            // )}`
 
             if (firstUpdate.current) return
             ;(async () => {
-                const response: Array<NASAImage> = await (
-                    await fetch(apiUrl)
-                ).json()
+                // const response: Array<NASAImage> = await (
+                //     await fetch(apiUrl)
+                // ).json()
                 setLoading(true)
 
                 try {
+                    const response = await fetchImages(startDate, endDate)
+
                     const totalImages = [...currImages, ...response.reverse()]
 
                     setImages(totalImages)
+                    // try {
+                    //     const totalImages = [...currImages, ...response.reverse()]
 
-                    localStorage.setItem("images", JSON.stringify(totalImages))
+                    //     setImages(totalImages)
+
+                    //     localStorage.setItem("images", JSON.stringify(totalImages))
                 } catch (error) {
                     alert("An error occured. Please try again.")
                     console.log(error)
@@ -83,7 +95,7 @@ const IndexPage = () => {
 
             // if localstorage empty
             if (!prevImages || !prevImages.length)
-                return fetchImages(startDate, endDate, images)
+                return getImages(startDate, endDate, images)
 
             // localstorage has some images
             const gapBetweenNowAndThen = intervalToDuration({
@@ -92,7 +104,7 @@ const IndexPage = () => {
             })
 
             if (gapBetweenNowAndThen.days > 1) {
-                return fetchImages(
+                return getImages(
                     addDays(new Date(prevImages[0].date), 1),
                     new Date(),
                     prevImages
@@ -102,7 +114,7 @@ const IndexPage = () => {
             setImages(prevImages)
         }
 
-        fetchImages(startDate, endDate, images)
+        getImages(startDate, endDate, images)
     }, [endDate])
 
     return (
@@ -111,7 +123,7 @@ const IndexPage = () => {
                 layout={!shouldReduceMotion}
                 className="grid sm:p-6 p-4 sm:pt-0 pt-12 items-start justify-center md:grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 grid-flow-dense bg-slate-900 overflow-scroll"
             >
-                <AnimateSharedLayout>
+                <AnimatePresence>
                     {(() => {
                         if (typeof window === "undefined") return
 
@@ -144,7 +156,7 @@ const IndexPage = () => {
 
                         return imagesToShow
                     })()}
-                </AnimateSharedLayout>
+                </AnimatePresence>
             </motion.main>
             {!likedOnly && (
                 <div className="relative flex items-center justify-center p-2 py-6 -top-4">

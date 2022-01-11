@@ -1,4 +1,4 @@
-import { useReducedMotion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { Fragment, useCallback, useEffect, useState } from "react"
@@ -7,6 +7,7 @@ import { BsArrowLeft } from "react-icons/bs"
 import { FaCalendarAlt } from "react-icons/fa"
 import { Controlled as ControlledZoom } from "react-medium-image-zoom"
 import "react-medium-image-zoom/dist/styles.css"
+import fetchImages from "../components/fetchImages"
 import { NASAImage } from "../components/ImageCard"
 import Layout from "../components/Layout"
 import ShareButton from "../components/ShareButton"
@@ -34,17 +35,36 @@ const Image = () => {
 
     useEffect(() => {
         if (!date) return
-
-        const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${process.env.NEXT_PUBLIC_NASA_API}&start_date=${date}&end_date=${date}`
         ;(async () => {
-            const response = await (await fetch(apiUrl)).json()
+            setLoading(true)
 
             try {
+                const response = await fetchImages(
+                    new Date(date),
+                    new Date(date)
+                )
+
                 setImage(response[0])
-            } catch {
+            } catch (error) {
                 alert("An error occured. Please try again.")
+                console.log(error)
             }
+
+            setLoading(false)
         })()
+
+        // const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${process.env.NEXT_PUBLIC_NASA_API}&start_date=${date}&end_date=${date}`
+        // ;(async () => {
+        //     const response = await (
+        //         await fetch(apiUrl, { cache: "force-cache" })
+        //     ).json()
+
+        //     try {
+        //         setImage(response[0])
+        //     } catch {
+        //         alert("An error occured. Please try again.")
+        //     }
+        // })()
     }, [date])
 
     useEffect(() => {
@@ -84,7 +104,12 @@ const Image = () => {
             </Link>
 
             {!loading && (
-                <main className="flex flex-col items-center w-full p-4 -mt-4 sm:p-6">
+                <motion.main
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-col items-center w-full p-4 -mt-4 sm:p-6"
+                >
                     <div
                         className={`grid w-full max-w-6xl grid-cols-1 m-4 mb-12 shadow-lg md:grid-cols-2 rounded-xl bg-slate-800`}
                     >
@@ -167,7 +192,7 @@ const Image = () => {
                             {image.title}
                         </figcaption>
                     </figure>
-                </main>
+                </motion.main>
             )}
         </Layout>
     )
