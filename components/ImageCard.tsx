@@ -12,6 +12,7 @@ import { cssTransition, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import "animate.css/animate.min.css"
 import ShareButton from "./ShareButton"
+import { getISODateFromDate } from "./fetchImages"
 
 export interface NASAImage {
     resource?: string
@@ -59,7 +60,7 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
 
     const imageIsToday = isSameDay(
         new Date(image.date),
-        zonedTimeToUtc(new Date(), "UTC")
+        new Date(getISODateFromDate(new Date()))
     )
 
     return (
@@ -113,7 +114,10 @@ const ImageCard = ({ image }: { image: NASAImage }) => {
                     )}
                     {image.date}
                 </time>
-                <div className="text-right opacity-90">
+                <div
+                    className="text-right opacity-90 hype"
+                    style={{ wordBreak: "break-word" }}
+                >
                     {image.copyright ? (
                         <Fragment>{image.copyright}</Fragment>
                     ) : (
