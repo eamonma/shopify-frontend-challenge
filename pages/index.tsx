@@ -4,6 +4,7 @@ import {
     format,
     intervalToDuration,
     isAfter,
+    parseISO,
 } from "date-fns"
 import {
     AnimatePresence,
@@ -20,7 +21,7 @@ import React, {
     useState,
 } from "react"
 import { SpinnerCircular } from "spinners-react"
-import fetchImages from "../components/fetchImages"
+import fetchImages, { getISODateFromDate } from "../components/fetchImages"
 import ImageCard, { NASAImage } from "../components/ImageCard"
 import Layout from "../components/Layout"
 import { useAppContext } from "../context/state"
@@ -61,7 +62,10 @@ const IndexPage = () => {
                 setLoading(true)
 
                 try {
-                    const response = await fetchImages(startDate, endDate)
+                    const response = await fetchImages(
+                        getISODateFromDate(startDate),
+                        getISODateFromDate(endDate)
+                    )
 
                     const totalImages = [...currImages, ...response.reverse()]
 

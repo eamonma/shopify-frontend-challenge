@@ -1,3 +1,4 @@
+import { format, utcToZonedTime, zonedTimeToUtc } from "date-fns-tz"
 import { motion, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -40,9 +41,23 @@ const Image = () => {
 
             try {
                 const response = await fetchImages(
-                    new Date(date),
-                    new Date(date)
+                    // new Date(date),
+                    // new Date(date)
+                    date,
+                    date
                 )
+
+                // console.log(
+                //     zonedTimeToUtc(
+                //         new Date(date),
+                //         "America/New_York"
+                //     ).toISOString(),
+                //     format(
+                //         new Date(date),
+                //         // zone(new Date(date), "America/New_York"),
+                //         "yyyy-MM-dd"
+                //     )
+                // )
 
                 setImage(response[0])
             } catch (error) {
