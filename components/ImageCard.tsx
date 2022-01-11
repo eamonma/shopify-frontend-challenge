@@ -1,18 +1,15 @@
+import "animate.css/animate.min.css"
 import { isSameDay } from "date-fns"
-import { zonedTimeToUtc } from "date-fns-tz"
 import { motion, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import React, { Fragment, useCallback, useEffect, useState } from "react"
-import { AiFillHeart, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai"
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"
 import { BsArrowRight } from "react-icons/bs"
 import { FaCalendarAlt } from "react-icons/fa"
 import { Controlled as ControlledZoom } from "react-medium-image-zoom"
 import "react-medium-image-zoom/dist/styles.css"
-import { cssTransition, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import "animate.css/animate.min.css"
-import ShareButton from "./ShareButton"
 import { getISODateFromDate } from "./fetchImages"
+import ShareButton from "./ShareButton"
 
 export interface NASAImage {
     resource?: string

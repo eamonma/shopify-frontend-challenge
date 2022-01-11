@@ -112,9 +112,11 @@ const Image = () => {
                         className={`grid w-full max-w-6xl grid-cols-1 m-4 mb-12 shadow-lg md:grid-cols-2 rounded-xl bg-slate-800`}
                     >
                         <header className="">
-                            <div className="p-6 -mb-10 text-xl text-orange-300">
-                                From today,
-                            </div>
+                            {imageIsToday && (
+                                <div className="p-6 -mb-10 text-xl text-orange-300">
+                                    From today,
+                                </div>
+                            )}
                             <h1
                                 className={`flex flex-col max-w-xl p-6 pb-2 text-5xl font-semibold not-sr-only md:text-7xl`}
                             >
