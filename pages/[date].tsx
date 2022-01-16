@@ -118,7 +118,7 @@ const Image = () => {
                                 </div>
                             )}
                             <h1
-                                className={`flex flex-col max-w-xl p-6 pb-2 text-5xl font-semibold not-sr-only md:text-7xl`}
+                                className={`flex flex-col max-w-xl p-6 pb-2 text-5xl font-semibold break-words not-sr-only md:text-7xl`}
                             >
                                 {image.title}
                             </h1>
@@ -140,7 +140,7 @@ const Image = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className="flex justify-center gap-4 p-6 py-2">
+                            <div className="flex justify-center gap-4 p-6 py-2 mb-4">
                                 <button
                                     className={`flex-1 text-lg w-max-full flex items-center justify-center gap-2 p-3 rounded-lg ${
                                         liked
