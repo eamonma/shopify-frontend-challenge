@@ -24,7 +24,7 @@ npm install
 npm run dev
 ```
 
-View the development server at https://localhost:3000.
+View the development server at http://localhost:3000.
 
 ## Known issues
 
