@@ -48,8 +48,6 @@ const fetchImages = async (
     // Check if API response is cached
     const lsApiCache = localStorage.getItem("apiCache")
     let apiCache: APICacheLocalStorage | Object = JSON.parse(lsApiCache)
-    // const startISODate = format(parseISO(startDate), "yyyy-MM-dd")
-    // const endISODate = format(endDate, "yyyy-MM-dd")
     if (!apiCache) apiCache = {}
 
     const ISODaysBetween = getISODaysArray(startDate, endDate)
